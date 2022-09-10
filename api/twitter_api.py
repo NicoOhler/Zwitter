@@ -1,6 +1,12 @@
 # Simple Twitter-Clone API
+# Author: Nico Ohler
+# Date: 2022-09-10
+
+# API on localhost:8000
+# communicates with redis database
 
 # requirements: fastapi, uvicorn, redis
+# specify redis url in redis_url.key
 # start with: uvicorn twitter_api:app --reload
 
 import time
