@@ -5,9 +5,11 @@
 # API on localhost:8000
 # communicates with redis database
 
-# requirements: fastapi, uvicorn, redis
+# packages: fastapi, uvicorn, redis
 # specify redis url in redis_url.key
 # start with: uvicorn twitter_api:app --reload
+
+# todo move fastapi to railway.app
 
 import time
 import uuid
@@ -15,7 +17,8 @@ import json
 import redis
 from fastapi import FastAPI, Request
 
-REDIS_URL_FILE = "redis_url.key"  # file with redis url
+REDIS_URL_FILE = "api/redis_url.key"  # file with redis url
+#REDIS_URL_FILE = "redis_url.key"  # file with redis url
 with open(REDIS_URL_FILE) as file:  # read redis url from file
     REDIS_URL = file.read()
 
@@ -26,14 +29,23 @@ LIMIT_OFFSET = 1  # offset for /timeline because redis is 0-indexed?
 # establish connection to redis
 # decode_responses=True is needed to get strings instead of bytes
 rdb = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+rdb_json = rdb.json()
+rdb_text = rdb.ft()
 
 # create FastAPI app
 app = FastAPI()
 
+# todo transactional?
 # todo none checks, error handling, etc.
 # todo login
-# todo async
+# todo pubsub for timeline
+# todo user profile
 # todo search tweets - GET /search/{query}
+
+tweet_to_remove = {"id": "86d65a60-3c13-4980-8255-84715e1f6b6e", "from": "aigner", "sent": 1662806699.5619178}
+id_to_remove = tweet_to_remove["id"]
+
+# remove tweet from timeline by id
 
 
 # API endpoints
@@ -46,6 +58,10 @@ async def send_tweet(user: str, tweet: Request):
     tweet["sent"] = time.time()
     tweet = json.dumps(tweet)
 
+    # start transaction
+    pipe = rdb.pipeline(transaction=True)
+    pipe.multi()
+
     # add tweet to user's user timeline
     rdb.lpush(f"{user}:user_timeline", tweet)
 
@@ -53,15 +69,26 @@ async def send_tweet(user: str, tweet: Request):
     followers = rdb.smembers(f"{user}:followers")
     for follower in followers:
         rdb.lpush(f"{follower}:timeline", tweet)
+
+    # execute transaction
+    pipe.execute()
     return f"Tweet sent from {user}"
 
 
 # delete tweet
 @app.delete("/tweet/{user}/{tweet_id}")
 async def delete_tweet(user: str, tweet_id: str):
+    # start transaction
+    pipe = rdb.pipeline(transaction=True)
+    pipe.multi()
+
+    # todo
     # remove tweet from user's user timeline
     # remove tweet from followers' home timelines
-    return {"message": "Tweet deleted"}
+
+    # execute transaction
+    pipe.execute()
+    return {"message": "Tweet deleted"} 
 
 
 # show user timeline
