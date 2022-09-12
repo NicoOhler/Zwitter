@@ -1,0 +1,100 @@
+store each tweet as tweet:{tweet_id} and store tweet_id in timelines instead of whole tweet
+	less redundancy, not really slower
+	allows easier scalability while also requiring less scaling
+	tweet: mentions, hashtags, created, embedded, likes, retweets, content, creator, people sent to
+	
+delete tweet
+	send tweet id to DELETE /tweet
+		retreive tweet
+	delete from user timeline
+	for each person sent to/mention/hashtag
+		delete tweet id from home timeline/mentions/hashtags
+	todo retweet
+
+	SREM tweet json on user timeline 
+	SREM tweet json on followers timelines
+	SREM tweet json on mentions and hashtags
+	
+tweets expire from followers timeline after x time
+	expire after 3 months
+		365 days/year * 100 tweets per day * 36 bytes per UUID = 1314000 bytes = 1.253 MB per user
+		500 gb ram * 1024 / 1.253 MB = 408 619 users
+		400 mill ==> 1000 * 500gb ram
+	do 
+		retreive last element
+		check elements timestamp
+		remove if too old
+			RPOP?
+	while too old
+	
+user profile - profile:{username} as key
+	unique username
+	mail
+	[pwd hash]
+	[API key]
+	following
+	[followers]
+	[creation_time]
+	
+authentication
+	selfmade
+		login page
+			username/mail + pwd
+			send username/mail + pwd hash to API
+			stay logged in option => save api key in cookie
+		API login
+			retreive userprofile by username
+				if exists and pwd hashes match
+					return api key
+				else 
+					bad login
+		key sent with every api call
+			sending/deleting tweets, accessing timelines only allowed for this user
+		store api_key:username in redis
+	google sign in
+		https://developers.google.com/identity/sign-in/web/sign-in
+		send id token to api and check integrity
+			https://developers.google.com/identity/sign-in/web/backend-auth
+			python google api client library
+			add kv pair to redis
+				token: username
+				EXPIRE token seconds (same as google token expiration)
+		token sent with every api call
+		
+update redis naming convention
+
+tweet search
+	GET /tweet/search/{INPUT}?count=
+	if INPUT starts with @
+		search usernames
+			all usernames stored in set - usernames
+			sscan usernames 0 match {INPUT[1:]}
+	if input starts with #
+		return n latest tweets in hashtag:{INPUT[1:]}
+	maybe later tweet content
+		iterate through each user's user timeline?
+		
+hashtags
+	#hashtag
+	add hashtags array to each tweet
+	each hashtags has set of tweets with this hashtag - hashtags:{hashtag}
+	before sending tweet extract all hashtags
+	for each hashtag
+		add to tweets hashtags array
+		convert to hyperlink
+		add this tweet to hashtags:{hashtag}	
+			prevent multi add on multiple equal hashtags
+			
+mentions
+	@username
+	add mentions array to each tweet
+	each user has a set of his mentions - mentions:{username}
+		before sending tweet check for each mention if user exists
+			GET /user/{username}
+			count = EXISTS profile:{username}
+			return true if count > 0 else false
+		convert to hyperlink if exists
+		add to tweets mentions array
+	new tweets also added to mentioned users' mentions and his home timeline
+		prevent multiple mentions of same user
+		add mention to home timeline but not 2nd time if he is a follower
