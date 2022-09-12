@@ -10,21 +10,13 @@
 # start with: uvicorn twitter_api:app --reload
 
 # todo move fastapi to railway.app
-
+from re import I
+from config import *
 import time
 import uuid
 import json
 import redis
 from fastapi import FastAPI, Request
-
-REDIS_URL_FILE = "api/redis_url.key"  # file with redis url
-#REDIS_URL_FILE = "redis_url.key"  # file with redis url
-with open(REDIS_URL_FILE) as file:  # read redis url from file
-    REDIS_URL = file.read()
-
-SKIP_DEFAULT = 0  # skips first 0 tweets for /timeline
-LIMIT_DEFAULT = 10  # limits to 10 tweets for /timeline
-LIMIT_OFFSET = 1  # offset for /timeline because redis is 0-indexed?
 
 # establish connection to redis
 # decode_responses=True is needed to get strings instead of bytes
@@ -42,10 +34,28 @@ app = FastAPI()
 # todo user profile
 # todo search tweets - GET /search/{query}
 
-tweet_to_remove = {"id": "86d65a60-3c13-4980-8255-84715e1f6b6e", "from": "aigner", "sent": 1662806699.5619178}
-id_to_remove = tweet_to_remove["id"]
+# sample tweet
+tweet = {
+    "id": "86d65a60-3c13-4980-8255-84715e1f6b6e",
+    "from": "aigner",
+    "sent": 1662806699.5619178,
+    "content": "waduttn @riedl #waduttn",
+    "likes": 0,
+    "retweets": 0,
+    "mentions": ["riedl"],
+    "hashtags": ["#waduttn"],
+    "recipients": ["riedl", "kurz"],
+}
 
-# remove tweet from timeline by id
+
+async def add_tweet_to_hashtags(hashtags, tweet_id):
+    for hashtag in hashtags:
+        rdb.sadd(f"hashtag:{hashtag}", tweet_id)
+
+
+async def add_tweet_to_mentions(mentions, tweet_id):
+    for mention in mentions:
+        rdb.sadd(f"mention:{mention}", tweet_id)
 
 
 # API endpoints
@@ -88,7 +98,7 @@ async def delete_tweet(user: str, tweet_id: str):
 
     # execute transaction
     pipe.execute()
-    return {"message": "Tweet deleted"} 
+    return {"message": "Tweet deleted"}
 
 
 # show user timeline
