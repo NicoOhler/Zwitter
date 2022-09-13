@@ -98,3 +98,41 @@ mentions
 	new tweets also added to mentioned users' mentions and his home timeline
 		prevent multiple mentions of same user
 		add mention to home timeline but not 2nd time if he is a follower
+
+fastapi
+	auto generate docs
+		http://127.0.0.1:8000/docs
+		docstrings
+	authentication - https://fastapi.tiangolo.com/tutorial/security/first-steps/
+	background tasks?
+		once verified that user is verified to post tweet
+		post and distribute in background
+		same for deleting
+	proper responses with status codes and error msgs
+	only async where needed
+	deploy on Railway
+	rename twitter api to api.py
+	remove response on post unless error
+	
+redis db types
+	usernames
+		ordered set of usernames
+		to see if username exists
+	sign_in_token:{username}
+		token used for authentication
+		expiration same as gogole token exp
+	profile:{username}
+		user profile as json
+	tweet:{tweet_id}
+		tweet as json
+		see example in api.py
+	home_timeline:{username}
+		set of tweet IDs this user received
+		expiration requires manual delete?
+		expire after 60 * 60 * 24 * 30 = 30 days
+	user_timeline:{username}
+		set of tweet IDs sent by this user
+	mentions:{username}
+		set of tweet IDs mentioning this user		
+	hashtags:{hashtag}
+		set of tweet IDs using this hashtag
