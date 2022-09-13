@@ -113,14 +113,29 @@ fastapi
 	deploy on Railway
 	rename twitter api to api.py
 	remove response on post unless error
+
+sample tweet
+	tweet = {
+		"id": "86d65a60-3c13-4980-8255-84715e1f6b6e",
+		"from": "aigner",
+		"timestamp": 1662806699.5619178,
+		"content": "waduttn @riedl #waduttn",
+		"likes": 0,
+		"retweets": 0,
+		"mentions": ["riedl"],
+		"hashtags": ["#waduttn"],
+		"recipients": ["riedl", "kurz"],
+	}
 	
 redis db types
-	usernames
+	users
 		ordered set of usernames
 		to see if username exists
 	sign_in_token:{username}
 		token used for authentication
 		expiration same as gogole token exp
+	followers:{username}
+		list of people following this user
 	profile:{username}
 		user profile as json
 	tweet:{tweet_id}
