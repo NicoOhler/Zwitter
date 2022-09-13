@@ -10,7 +10,6 @@
 # start with: uvicorn twitter_api:app --reload
 
 # todo move fastapi to railway.app
-from re import I
 from config import *
 import time
 import uuid
@@ -51,6 +50,7 @@ def prepare_tweet(tweet, user):
     tweet["retweets"] = 0
 
     # extract unique hashtags and mentions
+    # todo add link to hashtag and mention
     tweet["hashtags"] = extract_hashtags(tweet["content"])
     tweet["mentions"] = extract_mentions(tweet["content"])
 
