@@ -7,7 +7,7 @@
 
 # packages: fastapi, uvicorn, redis
 # specify redis url in redis_url.key
-# start with: uvicorn twitter_api:app --reload
+# start with: uvicorn api:app --reload
 
 # todo move fastapi to railway.app
 from config import *

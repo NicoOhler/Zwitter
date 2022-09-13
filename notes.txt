@@ -59,23 +59,7 @@ fastapi
 	rename twitter api to api.py
 	remove response on post unless error
 
-sample tweet
-	tweet = {
-		"id": "86d65a60-3c13-4980-8255-84715e1f6b6e",
-		"from": "aigner",
-		"timestamp": 1662806699.5619178,
-		"content": "waduttn @riedl #waduttn",
-		"likes": 0,
-		"retweets": 0,
-		"mentions": ["riedl"],
-		"hashtags": ["#waduttn"],
-		"recipients": ["riedl", "kurz"],
-	}
-	
-redis db types
-	users
-		ordered set of usernames
-		to see if username exists
+redis db overview
 	sign_in_token:{username}
 		token used for authentication
 		expiration same as gogole token exp
@@ -84,8 +68,17 @@ redis db types
 	profile:{username}
 		user profile as json
 	tweet:{tweet_id}
-		tweet as json
-		see example in api.py
+		tweet = {
+			"id": "86d65a60-3c13-4980-8255-84715e1f6b6e",
+			"from": "aigner",
+			"timestamp": 1662806699.5619178,
+			"content": "waduttn @riedl #waduttn",
+			"likes": 0,
+			"retweets": 0,
+			"mentions": ["riedl"],
+			"hashtags": ["#waduttn"],
+			"recipients": ["riedl", "kurz"],
+		}
 	home_timeline:{username}
 		set of tweet IDs this user received
 		expiration requires manual delete?
