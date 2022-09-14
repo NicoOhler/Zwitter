@@ -43,6 +43,9 @@ def extract_mentions(text):
 
 
 def prepare_tweet(tweet, user):
+    if len(tweet["content"]) > CHARACTER_LIMIT:
+        raise Exception("Tweet exceeds character limit")
+
     tweet["id"] = str(uuid.uuid4())
     tweet["from"] = user
     tweet["time"] = time.time()

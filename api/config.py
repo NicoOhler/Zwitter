@@ -8,3 +8,5 @@ SKIP_DEFAULT = 0  # skips first 0 tweets for /timeline
 LIMIT_DEFAULT = 10  # limits to 10 tweets for /timeline
 LIMIT_OFFSET = 1  # offset for /timeline because redis is 0-indexed?
 TTL = 60 * 60 * 24 * 7  # expire after 7 days
+
+CHARACTER_LIMIT = 280  # character limit for tweets
