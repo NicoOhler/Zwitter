@@ -26,6 +26,7 @@ rdb_text = rdb.ft()
 # create FastAPI app
 app = FastAPI()
 
+# todo comments - comment:{tweet_id} -> [comment_id]
 # todo transactional?
 # todo none checks, error handling, etc.
 # todo login
