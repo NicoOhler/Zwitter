@@ -20,8 +20,6 @@ from fastapi import FastAPI, Request
 # establish connection to redis
 # decode_responses=True is needed to get strings instead of bytes
 rdb = redis.Redis.from_url(REDIS_URL, decode_responses=True)
-rdb_json = rdb.json()
-rdb_text = rdb.ft()
 
 # create FastAPI app
 app = FastAPI()
@@ -68,6 +66,13 @@ def prepare_tweet(tweet, user):
 
 
 # API endpoints
+# get tweets 
+@app.get("/tweet")  # ?id={tweet_id},{tweet_id}
+async def get_tweets(request: Request):
+    ids = request.query_params.get("id").split(",")
+    tweets = [rdb.get(f"tweet:{id}") for id in ids]
+    return json.dumps(tweets)
+
 # send tweet
 @app.post("/tweet/{user}")
 async def send_tweet(user: str, tweet: Request):
