@@ -1,3 +1,4 @@
+<!-- start with npm run dev -->
 <script>
 	import Timeline from "./twitter/Timeline.svelte";
 	import { Tabs, TabList, TabPanel, Tab } from "./ui/tabs/tabs.js";
@@ -11,20 +12,30 @@
 
 	// load data from backend
 	onMount(async () => {
+		// todo simplify this
 		// get all tweets in user timeline
-		const response = await getUserTimeline(user);
-		let userTimeline = response.json();
-		console.log(userTimeline);
-		userTimeline.forEach((tweet) => {
-			userTimelineTweets.push(tweet);
-		});
+		let userTimeline = await getUserTimeline(user);
+		if (Array.isArray(userTimeline)) {
+			userTimeline.forEach((tweet) => {
+				userTimelineTweets.push(tweet);
+			});
+		} else {
+			console.log("Error fetching user timeline");
+			console.log(userTimeline);
+			userTimelineTweets = null;
+		}
 
 		// get all tweets in home timeline
-		const response2 = await getHomeTimeline(user);
-		let homeTimeline = response2.json();
-		homeTimeline.forEach((tweet) => {
-			homeTimelineTweets.push(tweet);
-		});
+		let homeTimeline = await getHomeTimeline();
+		if (Array.isArray(homeTimeline))
+			homeTimeline.forEach((tweet) => {
+				homeTimelineTweets.push(tweet);
+			});
+		else {
+			console.log("Error fetching home timeline");
+			console.log(homeTimeline);
+			homeTimelineTweets = null;
+		}
 
 		// get profile data
 		//const response3 = await getProfile();
@@ -40,11 +51,23 @@
 	</TabList>
 
 	<TabPanel>
-		<Timeline tweets={userTimelineTweets} />
+		{#if homeTimelineTweets == null}
+			Error fetching home timeline
+		{:else if homeTimelineTweets.length > 0}
+			<Timeline tweets={homeTimelineTweets} />
+		{:else}
+			<p>loading...</p>
+		{/if}
 	</TabPanel>
 
 	<TabPanel>
-		<Timeline tweets={homeTimelineTweets} />
+		{#if userTimelineTweets == null}
+			Error fetching user timeline
+		{:else if userTimelineTweets.length > 0}
+			<Timeline tweets={userTimelineTweets} />
+		{:else}
+			<p>loading...</p>
+		{/if}
 	</TabPanel>
 
 	<TabPanel><h2>Profile</h2></TabPanel>

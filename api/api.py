@@ -16,6 +16,7 @@ import uuid
 import json
 import redis
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 
 # establish connection to redis
 # decode_responses=True is needed to get strings instead of bytes
@@ -23,6 +24,12 @@ rdb = redis.Redis.from_url(REDIS_URL, decode_responses=True)
 
 # create FastAPI app
 app = FastAPI()
+# CORS middleware specifies allowed origins
+app.add_middleware(CORSMiddleware,
+                   allow_origins=ALLOWED_ORIGINS,
+                   allow_credentials=True,
+                   allow_methods=["*"],
+                   allow_headers=["*"])
 
 # todo comments - comment:{tweet_id} -> [comment_id]
 # todo transactional?
@@ -74,6 +81,7 @@ async def get_tweets(request: Request):
     ids = request.query_params.get("id").split(",")
     tweets = [rdb.get(f"tweet:{id}") for id in ids]
     return json.dumps(tweets)
+
 
 # send tweet
 @app.post("/tweet/{user}")

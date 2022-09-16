@@ -3,6 +3,13 @@ REDIS_URL_FILE = "redis_url.key"  # file with redis url
 with open(REDIS_URL_FILE) as file:  # read redis url from file
     REDIS_URL = file.read()
 
+# URLs allowed to access the API (CORS)
+# todo change to railway.app
+ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
 # timeline
 SKIP_DEFAULT = 0  # skips first 0 tweets for /timeline
 LIMIT_DEFAULT = 10  # limits to 10 tweets for /timeline
