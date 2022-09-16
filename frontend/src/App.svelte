@@ -17,7 +17,7 @@
 		userTimeline = await getUserTimeline(user);
 
 		// get all tweets in home timeline
-		homeTimeline = await getHomeTimeline();
+		homeTimeline = await getHomeTimeline(user);
 
 		// get profile data
 		//const response3 = await getProfile();

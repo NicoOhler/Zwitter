@@ -1,6 +1,6 @@
 const IP = "localhost";
 const PORT = "8000";
- const URL = "http://" + IP + ":" + PORT + "/";
+const URL = "http://" + IP + ":" + PORT + "/";
 
 async function getTweets(tweets) {
     return fetch(URL + "tweet?id=" + tweets.join(",")).then(response => response.json());
@@ -25,7 +25,7 @@ async function deleteTweet(tweet_id, user) {
 async function getUserTimeline(user) {
     let response = await fetch(URL + "timeline/" + user + "/user").then(response => response.json())
     let tweets = []
-    if (!Array.isArray(response)) 
+    if (!Array.isArray(response))
         return null
     response.forEach((tweet) => {
         tweets.push(JSON.parse(tweet));
@@ -34,7 +34,14 @@ async function getUserTimeline(user) {
 }
 
 async function getHomeTimeline(user) {
-    return fetch(URL + "timeline/" + user + "/home").then(response => response.json());
+    let response = await fetch(URL + "timeline/" + user + "/home").then(response => response.json())
+    let tweets = []
+    if (!Array.isArray(response))
+        return null
+    response.forEach((tweet) => {
+        tweets.push(JSON.parse(tweet));
+    });
+    return tweets;
 }
 
 async function getFollowers(user) {

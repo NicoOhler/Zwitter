@@ -63,6 +63,7 @@ def prepare_tweet(tweet, user):
     tweet["retweet_count"] = 0
 
     # extract unique hashtags and mentions
+    # todo mention displayname
     # todo add link to hashtag and mention
     tweet["hashtags"] = extract_hashtags(tweet["content"])
     tweet["mentions"] = extract_mentions(tweet["content"])
