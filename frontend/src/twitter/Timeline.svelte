@@ -1,6 +1,6 @@
 <script>
 	import TweetView from "./TweetView.svelte";
-	export let tweets = [];
+	export let tweets = undefined;
 </script>
 
 <main>

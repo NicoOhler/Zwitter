@@ -28,8 +28,8 @@
 	.tweet {
 		margin: 1rem;
 		padding: 1.25rem 1.75rem;
-		border-radius: 5px;
-		background: hsl(240, 20%, 15%);
+		border-radius: 20px;
+		background: hsl(250, 5%, 20%);
 		color: hsl(0, 0%, 100%);
 		box-shadow: 0 1px 20px -10px hsla(0, 0%, 0%, 0.2);
 		text-align: center;
@@ -65,7 +65,7 @@ using the pseudo element on the entire document (`::selection {}`) would work as
 using the > direct children selector would skip the time element
 */
 	.tweet *::selection {
-		color: hsl(150, 95%, 40%);
+		color: hsl(25, 100%, 47%);
 	}
 
 	/* when the viewport is wider than an arbitrary threshold */
