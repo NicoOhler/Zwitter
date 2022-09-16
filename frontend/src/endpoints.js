@@ -23,7 +23,14 @@ async function deleteTweet(tweet_id, user) {
 }
 
 async function getUserTimeline(user) {
-    return fetch(URL + "timeline/" + user + "/user").then(response => response.json());
+    let response = await fetch(URL + "timeline/" + user + "/user").then(response => response.json())
+    let tweets = []
+    if (!Array.isArray(response)) 
+        return null
+    response.forEach((tweet) => {
+        tweets.push(JSON.parse(tweet));
+    });
+    return tweets;
 }
 
 async function getHomeTimeline(user) {

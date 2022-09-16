@@ -6,36 +6,18 @@
 	import { onMount } from "svelte";
 
 	let user = "aigner";
-	let userTimelineTweets = [];
-	let homeTimelineTweets = [];
+	let userTimeline = undefined;
+	let homeTimeline = undefined;
 	let profile = undefined;
 
 	// load data from backend
 	onMount(async () => {
 		// todo simplify this
 		// get all tweets in user timeline
-		let userTimeline = await getUserTimeline(user);
-		if (Array.isArray(userTimeline)) {
-			userTimeline.forEach((tweet) => {
-				userTimelineTweets.push(JSON.parse(tweet));
-			});
-		} else {
-			console.log("Error fetching user timeline");
-			console.log(userTimeline);
-			userTimelineTweets = null;
-		}
+		userTimeline = await getUserTimeline(user);
 
 		// get all tweets in home timeline
-		let homeTimeline = await getHomeTimeline();
-		if (Array.isArray(homeTimeline))
-			homeTimeline.forEach((tweet) => {
-				homeTimelineTweets.push(JSON.parse(tweet));
-			});
-		else {
-			console.log("Error fetching home timeline");
-			console.log(homeTimeline);
-			homeTimelineTweets = null;
-		}
+		homeTimeline = await getHomeTimeline();
 
 		// get profile data
 		//const response3 = await getProfile();
@@ -51,23 +33,11 @@
 	</TabList>
 
 	<TabPanel>
-		{#if homeTimelineTweets == null}
-			Error fetching home timeline
-		{:else if homeTimelineTweets.length > 0}
-			<Timeline tweets={homeTimelineTweets} />
-		{:else}
-			<p>loading...</p>
-		{/if}
+		<Timeline tweets={homeTimeline} />
 	</TabPanel>
 
 	<TabPanel>
-		{#if userTimelineTweets == null}
-			Error fetching user timeline
-		{:else if userTimelineTweets.length > 0}
-			<Timeline tweets={userTimelineTweets} />
-		{:else}
-			<p>loading...</p>
-		{/if}
+		<Timeline tweets={userTimeline} />
 	</TabPanel>
 
 	<TabPanel><h2>Profile</h2></TabPanel>
