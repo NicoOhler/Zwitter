@@ -1,5 +1,7 @@
 <script>
 	import Icon from "../ui/Icon.svelte";
+	import heart from "../../svg/icon-heart.svg";
+
 
 	export let tweet;
 
@@ -17,6 +19,7 @@
 	<h3>{created_at}</h3>
 	<p>{tweet.content}</p>
 	<div class="icons">
+		<img src={heart} alt="heart" />
 		<Icon href="like" />{tweet.like_count}
 		<Icon href="reply" />{tweet.reply_count}
 		<Icon href="retweet" />{tweet.retweet_count}
