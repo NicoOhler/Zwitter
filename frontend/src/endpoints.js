@@ -31,17 +31,17 @@ async function getHomeTimeline(user) {
 }
 
 async function getFollowers(user) {
-    return fetch(URL + "follower/" + user).then(response => response.json());
+    return fetch(URL + "followers/" + user).then(response => response.json());
 }
 
 async function followUser(user, follower) {
-    return fetch(URL + "follower/" + user + "/" + follower, {
+    return fetch(URL + "followers/" + user + "/" + follower, {
         method: "POST"
     }).then(response => response.json());
 }
 
 async function unfollowUser(user, follower) {
-    return fetch(URL + "follower/" + user + "/" + follower, {
+    return fetch(URL + "followers/" + user + "/" + follower, {
         method: "DELETE"
     }).then(response => response.json());
 }

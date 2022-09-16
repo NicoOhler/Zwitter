@@ -17,7 +17,7 @@
 		let userTimeline = await getUserTimeline(user);
 		if (Array.isArray(userTimeline)) {
 			userTimeline.forEach((tweet) => {
-				userTimelineTweets.push(tweet);
+				userTimelineTweets.push(JSON.parse(tweet));
 			});
 		} else {
 			console.log("Error fetching user timeline");
@@ -29,7 +29,7 @@
 		let homeTimeline = await getHomeTimeline();
 		if (Array.isArray(homeTimeline))
 			homeTimeline.forEach((tweet) => {
-				homeTimelineTweets.push(tweet);
+				homeTimelineTweets.push(JSON.parse(tweet));
 			});
 		else {
 			console.log("Error fetching home timeline");
@@ -46,7 +46,7 @@
 <Tabs>
 	<TabList>
 		<Tab>Home</Tab>
-		<Tab>Latest</Tab>
+		<Tab>User</Tab>
 		<Tab>Profile</Tab>
 	</TabList>
 

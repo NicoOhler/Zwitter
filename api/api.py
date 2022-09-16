@@ -3,7 +3,8 @@
 # Date: 2022-09-10
 
 # API on localhost:8000
-# communicates with redis database
+# communicates with redis database hosted on railway.app
+# https://railway.app/project/511e69e2-25d5-471a-b862-9e676ec5401c
 
 # packages: fastapi, uvicorn, redis
 # specify redis url in redis_url.key
@@ -31,7 +32,8 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"])
 
-# todo comments - comment:{tweet_id} -> [comment_id]
+# todo background task ==> reduce latency
+# todo reply - reply:{tweet_id} -> [reply_id]
 # todo transactional?
 # todo none checks, error handling, etc.
 # todo login
@@ -71,7 +73,9 @@ def prepare_tweet(tweet, user):
             tweet["mentions"].remove(mention)
 
     # recipients are unique followers and mentioned users
-    tweet["recipients"] = list(set(tweet["mentions"] + rdb.smembers(f"followers:{user}")))
+    tweet["recipients"] = list(set(tweet["mentions"] + list(rdb.smembers(f"followers:{user}"))))
+
+    return tweet
 
 
 # API endpoints
@@ -92,7 +96,7 @@ async def send_tweet(user: str, tweet: Request):
 
     # todo start transaction
     # upload tweet
-    rdb.set("tweet:{tweet_id}", json.dumps(tweet))
+    rdb.set(f"tweet:{tweet_id}", json.dumps(tweet))
 
     # add tweet to user's user timeline
     rdb.lpush(f"user_timeline:{user}", tweet_id)
@@ -138,10 +142,10 @@ async def delete_tweet(user: str, tweet_id: str):
 
 # show user timeline
 @app.get("/timeline/{user}/user")
-async def show_user_timeline(user: str, skip: int = SKIP_DEFAULT, limit: int = LIMIT_DEFAULT):
+async def get_user_timeline(user: str, skip: int = SKIP_DEFAULT, limit: int = LIMIT_DEFAULT):
     timeline = []
     # get all tweets from user timeline
-    tweet_ids = rdb.lrange(f"{user}:user_timeline", skip, limit - LIMIT_OFFSET)
+    tweet_ids = rdb.lrange(f"user_timeline:{user}", skip, limit - LIMIT_OFFSET)
     for tweet_id in tweet_ids:
         timeline.append(rdb.get(f"tweet:{tweet_id}"))
     return timeline
@@ -149,10 +153,10 @@ async def show_user_timeline(user: str, skip: int = SKIP_DEFAULT, limit: int = L
 
 # show home timeline
 @app.get("/timeline/{user}/home")
-async def show_home_timeline(user: str, skip: int = SKIP_DEFAULT, limit: int = LIMIT_DEFAULT):
+async def get_home_timeline(user: str, skip: int = SKIP_DEFAULT, limit: int = LIMIT_DEFAULT):
     timeline = []
     # get all tweets from home timeline
-    tweet_ids = rdb.lrange(f"{user}:home_timeline", skip, limit - LIMIT_OFFSET)
+    tweet_ids = rdb.lrange(f"home_timeline:{user}", skip, limit - LIMIT_OFFSET)
     for tweet_id in tweet_ids:
         timeline.append(rdb.get(f"tweet:{tweet_id}"))
     return timeline
