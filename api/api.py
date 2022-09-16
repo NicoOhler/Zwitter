@@ -46,10 +46,12 @@ def prepare_tweet(tweet, user):
         raise Exception("Tweet exceeds character limit")
 
     tweet["id"] = str(uuid.uuid4())
-    tweet["from"] = user
-    tweet["time"] = time.time()
-    tweet["likes"] = 0
-    tweet["retweets"] = 0
+    tweet["username"] = user
+    tweet["display_name"] = user
+    tweet["created_at"] = time.time()
+    tweet["like_count"] = 0
+    tweet["reply_count"] = 0
+    tweet["retweet_count"] = 0
 
     # extract unique hashtags and mentions
     # todo add link to hashtag and mention
@@ -66,7 +68,7 @@ def prepare_tweet(tweet, user):
 
 
 # API endpoints
-# get tweets 
+# get tweets
 @app.get("/tweet")  # ?id={tweet_id},{tweet_id}
 async def get_tweets(request: Request):
     ids = request.query_params.get("id").split(",")
@@ -176,4 +178,5 @@ async def show_followers(user: str):
 @app.get("/user/{user}")
 async def show_user_profile(user: str):
     # todo
+    # differentiate between public and private profile
     return {"user": user}

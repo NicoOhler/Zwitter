@@ -1,30 +1,54 @@
 <script>
-	export let name;
+	import Timeline from "./twitter/Timeline.svelte";
+	import { Tabs, TabList, TabPanel, Tab } from "./ui/tabs/tabs.js";
+	import { getUserTimeline, getHomeTimeline, getProfile } from "./endpoints.js";
+	import { onMount } from "svelte";
+
+	let user = "aigner";
+	let userTimelineTweets = [];
+	let homeTimelineTweets = [];
+	let profile = undefined;
+
+	// load data from backend
+	onMount(async () => {
+		// get all tweets in user timeline
+		const response = await getUserTimeline(user);
+		let userTimeline = response.json();
+		console.log(userTimeline);
+		userTimeline.forEach((tweet) => {
+			userTimelineTweets.push(tweet);
+		});
+
+		// get all tweets in home timeline
+		const response2 = await getHomeTimeline(user);
+		let homeTimeline = response2.json();
+		homeTimeline.forEach((tweet) => {
+			homeTimelineTweets.push(tweet);
+		});
+
+		// get profile data
+		//const response3 = await getProfile();
+		//profile = response3.json();
+	});
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<Tabs>
+	<TabList>
+		<Tab>Home</Tab>
+		<Tab>Latest</Tab>
+		<Tab>Profile</Tab>
+	</TabList>
+
+	<TabPanel>
+		<Timeline tweets={userTimelineTweets} />
+	</TabPanel>
+
+	<TabPanel>
+		<Timeline tweets={homeTimelineTweets} />
+	</TabPanel>
+
+	<TabPanel><h2>Profile</h2></TabPanel>
+</Tabs>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>
