@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@rollup/plugin-image": "^2.1.1",
-    "sirv-cli": "^2.0.0"
+    "sirv-cli": "^2.0.0",
+    "svelte-search": "^2.0.1"
   }
 }

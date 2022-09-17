@@ -1,6 +1,7 @@
 <!-- start with npm run dev -->
 <script>
 	import Timeline from "./twitter/Timeline.svelte";
+	import SearchBar from "./twitter/SearchBar.svelte";
 	import { Tabs, TabList, TabPanel, Tab } from "./ui/tabs/tabs.js";
 	import SplitPane from "./ui/SplitPane.svelte";
 	import { getUserTimeline, getHomeTimeline, getProfile } from "./endpoints.js";
@@ -56,7 +57,10 @@
 				</Tabs>
 			</svelte:fragment>
 			<svelte:fragment slot="right">
-				Search<br />
+				<div class="center">
+					<SearchBar />
+				</div>
+				<br />
 				Discover<br />
 				following<br />
 				trending

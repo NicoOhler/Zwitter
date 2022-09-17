@@ -64,6 +64,10 @@ async function getProfile(user) {
     return fetch(URL + "user/" + user).then(response => response.json());
 }
 
+async function search(query) {
+    return fetch(URL + "search/" + query).then(response => response.json());
+}
+
 export {
     getTweets,
     sendTweet,
@@ -73,5 +77,6 @@ export {
     getFollowers,
     followUser,
     unfollowUser,
-    getProfile
+    getProfile,
+    search
 };

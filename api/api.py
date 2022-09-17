@@ -199,6 +199,7 @@ async def show_user_profile(user: str):
 # search - show n hashtags and m users
 @app.get("/search/{query}")
 async def search(query: str):
+    # todo both hashtag and user search in parallel
     # get hashtags starting with query
     hashtags = rdb.sscan_iter(f"hashtags", match=f"{query}*")
     # keep n most used hashtags
