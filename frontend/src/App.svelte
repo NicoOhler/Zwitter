@@ -6,6 +6,8 @@
 	import { getUserTimeline, getHomeTimeline, getProfile } from "./endpoints.js";
 	import { onMount } from "svelte";
 
+	import logo from "../assets/logo/logo.png";
+
 	let user = "aigner";
 	let userTimeline = undefined;
 	let homeTimeline = undefined;
@@ -28,7 +30,9 @@
 
 <SplitPane allowResize={false} leftInitialSize="15%">
 	<svelte:fragment slot="left">
-		<h1>left</h1>
+		<div class="center">
+			<img src={logo} alt="logo" width="80vw" />
+		</div>
 	</svelte:fragment>
 	<svelte:fragment slot="right">
 		<SplitPane allowResize={false} leftInitialSize="75%">
@@ -62,4 +66,9 @@
 </SplitPane>
 
 <style>
+	.center {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 </style>
