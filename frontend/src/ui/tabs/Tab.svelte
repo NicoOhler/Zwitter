@@ -20,6 +20,7 @@
 		border-radius: 0;
 		margin: 0;
 		color: #ccc;
+		height: 6.5vh;
 	}
 
 	.selected {

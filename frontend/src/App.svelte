@@ -2,6 +2,7 @@
 <script>
 	import Timeline from "./twitter/Timeline.svelte";
 	import { Tabs, TabList, TabPanel, Tab } from "./ui/tabs/tabs.js";
+	import SplitPane from "./ui/SplitPane.svelte";
 	import { getUserTimeline, getHomeTimeline, getProfile } from "./endpoints.js";
 	import { onMount } from "svelte";
 
@@ -25,23 +26,40 @@
 	});
 </script>
 
-<Tabs>
-	<TabList>
-		<Tab>Home</Tab>
-		<Tab>User</Tab>
-		<Tab>Profile</Tab>
-	</TabList>
+<SplitPane allowResize={false} leftInitialSize="15%">
+	<svelte:fragment slot="left">
+		<h1>left</h1>
+	</svelte:fragment>
+	<svelte:fragment slot="right">
+		<SplitPane allowResize={false} leftInitialSize="75%">
+			<svelte:fragment slot="left">
+				<Tabs>
+					<TabList>
+						<Tab>Home</Tab>
+						<Tab>User</Tab>
+						<Tab>Profile</Tab>
+					</TabList>
 
-	<TabPanel>
-		<Timeline tweets={homeTimeline} />
-	</TabPanel>
+					<TabPanel>
+						<Timeline tweets={homeTimeline} />
+					</TabPanel>
 
-	<TabPanel>
-		<Timeline tweets={userTimeline} />
-	</TabPanel>
+					<TabPanel>
+						<Timeline tweets={userTimeline} />
+					</TabPanel>
 
-	<TabPanel><h2>Profile</h2></TabPanel>
-</Tabs>
+					<TabPanel><h2>Profile</h2></TabPanel>
+				</Tabs>
+			</svelte:fragment>
+			<svelte:fragment slot="right">
+				Search<br />
+				Discover<br />
+				following<br />
+				trending
+			</svelte:fragment>
+		</SplitPane>
+	</svelte:fragment>
+</SplitPane>
 
 <style>
 </style>
