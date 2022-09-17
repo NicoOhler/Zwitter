@@ -2,7 +2,6 @@
 	import Icon from "../ui/Icon.svelte";
 	import heart from "../../svg/icon-heart.svg";
 
-
 	export let tweet;
 
 	let created_at = new Date(tweet.created_at * 1000);
@@ -19,8 +18,11 @@
 	<h3>{created_at}</h3>
 	<p>{tweet.content}</p>
 	<div class="icons">
-		<img src={heart} alt="heart" />
-		<Icon href="like" />{tweet.like_count}
+		<div>
+			<img src={heart} alt="heart" />
+			<Icon href="like" />{tweet.like_count}
+		</div>
+
 		<Icon href="reply" />{tweet.reply_count}
 		<Icon href="retweet" />{tweet.retweet_count}
 	</div>
@@ -29,7 +31,7 @@
 <style>
 	/* by default align the elements in the .tweet container */
 	.tweet {
-		margin: 1rem;
+		margin: .7rem;
 		padding: 1.25rem 1.75rem;
 		border-radius: 20px;
 		background: hsl(250, 5%, 20%);

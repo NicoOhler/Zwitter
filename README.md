@@ -1,4 +1,4 @@
-# Twitter Clone
+# Zwitter - Twitter Clone
 
 ### Used Technologies
  * Svelte (Frontend)
@@ -19,3 +19,8 @@
 - User search
 - Hashtag search
 
+### Sources
+- [loading spinner](https://github.com/Schum123/svelte-loading-spinners)
+- [tweetView component](https://svelte.dev/repl/2fd524fb5c7f427891269b4d0928ac15?version=3.12.1)
+- [split pane component](https://svelte.dev/repl/5ab84358dd8b46ad9474884f2359ff9b?version=3.50.1)
+- todo
