@@ -1,6 +1,6 @@
 <script>
 	import Icon from "../ui/Icon.svelte";
-	import heart from "../../svg/icon-heart.svg";
+	import heart from "../../assets/svg/icon-heart.svg";
 
 	export let tweet;
 
