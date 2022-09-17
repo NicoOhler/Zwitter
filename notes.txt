@@ -12,15 +12,6 @@ tweets expire from followers timeline after x time
 
 add link behind hashtags and mentions
 	
-user profile - profile:{username} as key
-	unique username
-	mail
-	[pwd hash]
-	[API key]
-	following
-	[followers]
-	[creation_time]
-	
 authentication
 	google sign in
 		https://developers.google.com/identity/sign-in/web/sign-in
@@ -34,14 +25,12 @@ authentication
 		
 tweet search
 	GET /tweet/search/{INPUT}?count=
-	if INPUT starts with @
+	show top 3 hashtags + 10 users
 		search usernames
 			all usernames stored in set - usernames
 			sscan usernames 0 match {INPUT[1:]}
-	if input starts with #
 		return n latest tweets in hashtag:{INPUT[1:]}
-	maybe later tweet content
-		iterate through each user's user timeline?
+
 					
 
 fastapi
@@ -60,6 +49,12 @@ fastapi
 	remove response on post unless error
 
 redis db overview
+	usernames
+		list of all usernames
+		used for search/check if username is taken
+	hashtags
+		list of all hashtags
+		used for search
 	sign_in_token:{username}
 		token used for authentication
 		expiration same as gogole token exp

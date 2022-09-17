@@ -39,7 +39,7 @@ app.add_middleware(CORSMiddleware,
 # todo login
 # todo pubsub for timeline
 # todo user profile
-# todo search tweets - GET /search/{query}
+# todo search - GET /search/{query}
 
 
 def extract_hashtags(text):
@@ -109,6 +109,7 @@ async def send_tweet(user: str, tweet: Request):
     # track hashtags and mentions
     for hashtag in tweet["hashtags"]:
         rdb.sadd(f"hashtags:{hashtag}", tweet_id)
+        rdb.sadd(f"hashtags", hashtag)
 
     for mention in tweet["mentions"]:
         rdb.sadd(f"mentions:{mention}", tweet_id)
@@ -193,3 +194,24 @@ async def show_user_profile(user: str):
     # todo
     # differentiate between public and private profile
     return {"user": user}
+
+
+# search - show n hashtags and m users
+@app.get("/search/{query}")
+async def search(query: str):
+    # get hashtags starting with query
+    hashtags = rdb.sscan_iter(f"hashtags", match=f"{query}*")
+    # keep n most used hashtags
+    hashtags = sorted(hashtags, key=lambda hashtag: rdb.scard(f"hashtags:{hashtag}"),
+                      reverse=True)[:HASHTAGS_PER_SEARCH]
+
+    # get users starting with query
+    users = rdb.keys(f"profile:{query}*")
+    # keep m most followed users
+    users = sorted(users, key=lambda user: rdb.scard(f"followers:{user}"), reverse=True)[:USERS_PER_SEARCH]
+
+    return {"hashtags": hashtags, "users": users}
+
+
+# todo merge timeline and tweets lookup
+# redis function?
