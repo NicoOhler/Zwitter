@@ -1,7 +1,7 @@
 <!-- start with npm run dev -->
 <script>
 	import Timeline from "./twitter/Timeline.svelte";
-	import SearchBar from "./twitter/SearchBar.svelte";
+	import SearchBar from "./ui/SearchBar.svelte";
 	import { Tabs, TabList, TabPanel, Tab } from "./ui/tabs/tabs.js";
 	import SplitPane from "./ui/SplitPane.svelte";
 	import { getUserTimeline, getHomeTimeline, getProfile } from "./endpoints.js";
