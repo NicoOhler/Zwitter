@@ -42,12 +42,8 @@ app.add_middleware(CORSMiddleware,
 # todo search - GET /search/{query}
 
 
-def extract_hashtags(text):
-    return list(set([word[1:] for word in text.split() if word.startswith("#")]))
-
-
-def extract_mentions(text):
-    return list(set([word[1:] for word in text.split() if word.startswith("@")]))
+def extract_words_starting_with(text, symbol):
+    return list(set([word[1:] for word in text.split() if word.startswith(symbol)]))
 
 
 def prepare_tweet(tweet, user):
@@ -65,8 +61,8 @@ def prepare_tweet(tweet, user):
     # extract unique hashtags and mentions
     # todo mention displayname
     # todo add link to hashtag and mention
-    tweet["hashtags"] = extract_hashtags(tweet["content"])
-    tweet["mentions"] = extract_mentions(tweet["content"])
+    tweet["hashtags"] = extract_words_starting_with(tweet["content"], "#")
+    tweet["mentions"] = extract_words_starting_with(tweet["content"], "@")
 
     # remove mentions of users who do not exist
     for mention in tweet["mentions"]:
